@@ -1,29 +1,105 @@
-import React from 'react';
-import{BrowserRouter as Router, Route, Switch} from 'react-router-dom';
-import { Home } from './Pages/Home';
-import { About } from './Pages/About';
-import { Contact } from './Pages/Contact';
-import { NoMatch } from './Pages/NoMatch';
-import { Layout } from './components/Layout';
-import { NavigationBar } from './components/NavigationBar';
+import React, { useState, useEffect } from "react";
+import "./components/login/login.css";
+import fire from "./fire";
+import Login from "./components/login/Login";
+import HomePage from "./components/homepage/HomePage";
 
+const App = () => {
+  const [user, setUser] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [hasAccount, setHasAccount] = useState(true);
 
-function App() {
+  const clearInputs = () => {
+    setEmail("");
+    setPassword("");
+  };
+
+  const clearErrors = () => {
+    setEmailError("");
+    setPasswordError("");
+  };
+
+  const handleLogin = () => {
+    clearErrors();
+    fire
+      .auth()
+      .signInWithEmailAndPassword(email, password)
+      .catch((err) => {
+        // eslint-disable-next-line default-case
+        switch (err.code) {
+          case "auth/invalid-email":
+          case "auth/user-disabled":
+          case "auth/user-not-found":
+            setEmailError(err.message);
+            break;
+          case "auth/wrong-password":
+            setPasswordError(err.message);
+            break;
+        }
+      });
+  };
+
+  const handleSignup = () => {
+    clearErrors();
+    fire
+      .auth()
+      .createUserWithEmailAndPassword(email, password)
+      .catch((err) => {
+        // eslint-disable-next-line default-case
+        switch (err.code) {
+          case "auth/email-already-in-use":
+          case "auth/invalid-email":
+            setEmailError(err.message);
+            break;
+          case "auth/weak-password":
+            setPasswordError(err.message);
+            break;
+        }
+      });
+  };
+
+  const handleLogout = () => {
+    fire.auth().signOut();
+  };
+
+  const authListener = () => {
+    fire.auth().onAuthStateChanged((user) => {
+      if (user) {
+        clearInputs();
+        setUser(user);
+      } else {
+        setUser("");
+      }
+    });
+  };
+
+  useEffect(() => {
+    authListener();
+  }, []);
+
   return (
-    <React.Fragment>
-      <NavigationBar />
-      <Layout>
-      <Router>
-        <Switch>
-          <Route exact path="/" component={Home} />
-          <Route path="/about" component={About} />
-          <Route path="/contact" component={Contact} />
-          <Route component={NoMatch} />
-        </Switch>
-      </Router>
-      </Layout>
-    </React.Fragment>
+    <div className="App">
+      {user ? (
+        <HomePage handleLogout={handleLogout} />
+      ) : (
+        <Login
+          email={email}
+          setEmail={setEmail}
+          password={password}
+          setPassword={setPassword}
+          handleLogin={handleLogin}
+          handleSignup={handleSignup}
+          hasAccount={hasAccount}
+          setHasAccount={setHasAccount}
+          emailError={emailError}
+          passwordError={passwordError}
+        />
+      )}
+    </div>
   );
-}
+};
 
 export default App;
