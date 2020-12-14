@@ -21,7 +21,10 @@ button {
   width: 100%;
   min-height: 100vh;
   padding: 0 20px;
-  background: #e9e9e9;
+
+  /* background-image: url("/src/assests/bg.jpg"); */
+  /* background-color: #cccccc; */
+  background: #b66767;
   display: flex;
 }
 
@@ -106,9 +109,9 @@ button {
 .hero nav {
   background: radial-gradient(
     ellipse at left bottom,
-    rgb(59, 64, 124) 0%,
-    rgba(94, 70, 139, 0.9) 59%,
-    rgba(62, 77, 155, 0.9) 100%
+    rgb(66, 73, 129) 0%,
+    rgba(81, 66, 110, 0.9) 59%,
+    rgba(58, 62, 100, 0.9) 100%
   );
   width: 100%;
   padding: 20px 40px;
@@ -135,4 +138,17 @@ button {
 
 .container {
   max-width: 100%;
+}
+
+footer {
+  background: radial-gradient(
+    ellipse at left bottom,
+    rgb(151, 156, 190) 0%,
+    rgba(137, 129, 155, 0.9) 59%,
+    rgba(140, 143, 167, 0.9) 100%
+  );
+  width: 100%;
+  padding: 20px 40px;
+  display: inline-flex;
+  align-items: center;
 }
