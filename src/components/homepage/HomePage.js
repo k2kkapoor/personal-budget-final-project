@@ -39,6 +39,7 @@ import axios from "axios";
 const HomePage = ({ handleLogout, email }) => {
   const [userName, setUserName] = useState("");
   const [name, setName] = useState("");
+  console.log("email" + email);
 
   fire.auth().onAuthStateChanged(function (user) {
     if (user) {
@@ -61,6 +62,7 @@ const HomePage = ({ handleLogout, email }) => {
       <Layout>
         <Router>
           <Switch>
+            <Route exact path="/" comaponent={() => <HomePage />} />
             <Route
               path="/expenses"
               component={() => <Expenses user={userName} />}

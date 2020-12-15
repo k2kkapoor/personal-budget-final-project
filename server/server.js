@@ -5,6 +5,7 @@ const app = express();
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const User = require("../model/userData");
+const { ObjectId } = require("mongodb");
 app.use(cors());
 mongoose.connect("mongodb://localhost:27017/pb-project", {
   useUnifiedTopology: true,
@@ -55,7 +56,7 @@ app.get("/user/:username", function (req, res) {
     });
 });
 
-app.post("/add", function (req, res) {
+app.post("/addUser", function (req, res) {
   let addData = {
     name: req.body.name,
     username: req.body.username,
@@ -71,6 +72,49 @@ app.post("/add", function (req, res) {
     .catch((mongooseErr) => {
       res.status("200").send(mongooseErr);
     });
+});
+
+app.post("/addNewData/:username", function (req, res) {
+  let addData = {
+    $push: {
+      expense: {
+        title: req.body.title,
+        amount: req.body.amount,
+        category: req.body.category,
+        date: req.body.date,
+      },
+    },
+  };
+  console.log("Server js data: " + addData);
+
+  User.findOneAndUpdate(
+    { username: req.params.username },
+    addData,
+    function (err, numberAffected, rawResponse) {
+      console.log(err);
+    }
+  );
+
+  // User.update({ username: req.params.username }), addData,
+  //   .then((userFound) => {
+  //     if (!userFound) {
+  //       return res.status(404).json("Something went wrong");
+  //     }
+  //     return res.status(200).send(raw);;
+  //   })
+  //   .catch((mongooseErr) => {
+  //     res.status("200").send(mongooseErr);
+  //   });
+
+  // User.findByIdAndUpdate({ username: req.body.username })
+  //   .then((data) => {
+  //     data = data.save();
+  //     res.json(data);
+  //     //mongoose.connection.close();
+  //   })
+  //   .catch((mongooseErr) => {
+  //     res.status("200").send(mongooseErr);
+  //   });
 });
 
 app.listen(3050, () => console.log("Server Started"));

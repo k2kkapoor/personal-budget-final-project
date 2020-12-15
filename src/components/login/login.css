@@ -152,3 +152,31 @@ footer {
   display: inline-flex;
   align-items: center;
 }
+
+.table td,
+.table th {
+  padding: 0.25em;
+}
+
+.react-bootstrap-table td {
+  width: 50%;
+  margin: auto 10px;
+}
+
+.addButton {
+  width: 20%;
+}
+
+#pageDropDown {
+  width: 10%;
+}
+
+.dialogContent {
+  display: grid;
+}
+
+.MuiPaper-root {
+  padding: 1%;
+  width: 30%;
+  height: 60%;
+}

@@ -31,6 +31,9 @@ const App = () => {
     fire
       .auth()
       .signInWithEmailAndPassword(email, password)
+      .then((user) => {
+        window.location = <HomePage />;
+      })
 
       .catch((err) => {
         // eslint-disable-next-line default-case
@@ -57,7 +60,7 @@ const App = () => {
         axios({
           method: "post",
           headers: { Pragma: "no-cache" },
-          url: "http://localhost:3050/add",
+          url: "http://localhost:3050/addUser",
           data: {
             name: name,
             username: email,
