@@ -6,6 +6,7 @@ import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory from "react-bootstrap-table2-paginator";
 
 import TextField from "@material-ui/core/TextField";
+import Label from "@material-ui/core/TextField";
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -73,6 +74,8 @@ export default class Expenses extends Component {
       month: "",
       year: "",
       isUpdate: false,
+      error: false,
+      errorMessage: "",
     };
   }
 
@@ -122,6 +125,7 @@ export default class Expenses extends Component {
   };
 
   handleClose = () => {
+    this.setState({ errorMessage: "" });
     this.clearInput();
     this.setState({ open: false });
   };
@@ -156,26 +160,11 @@ export default class Expenses extends Component {
     window.location.reload();
   };
 
-  // formatDate = () => {
-  //   let formatComponent = this;
-  //   let dateValue = this.state.date;
-  //   let month = dateValue.substr(5, 2);
-  //   let year = dateValue.slice(0, 4);
-  //   console.log("date " + this.state.date);
-  //   console.log(month);
-  //   console.log(year);
-  //   formatComponent.setState({ month: month });
-  //   formatComponent.setState({ year: year });
-  // };
-
   updateButton(cell, row, rowIndex, formatExtraData) {
     return (
       <ReactBootStrap.Button
         variant="primary"
         value={row}
-        // date={row.date}
-        // onClick={() => this.handleUpdate()}
-        // onClick={this.handleUpdate}
         onClick={(e) => this.updateClicked(e, row)}
       >
         Update
@@ -196,39 +185,49 @@ export default class Expenses extends Component {
   }
 
   handleSubmit = () => {
-    if (this.state.isUpdate) {
-      console.log(this.state.userId);
-      axios({
-        method: "post",
-        headers: { Pragma: "no-cache" },
-        url: "http://localhost:3050/updateData",
-        data: {
-          id: this.state.userId,
-          username: this.props.user,
-          title: this.state.title,
-          amount: this.state.amount,
-          category: this.state.category,
-          date: this.state.date,
-        },
-      });
+    if (
+      this.state.title === "" ||
+      this.state.amount === "" ||
+      this.state.title === "" ||
+      this.state.title === ""
+    ) {
+      this.setState({ errorMessage: "Please enter all the values." });
     } else {
-      axios({
-        method: "post",
-        headers: { Pragma: "no-cache" },
-        url: "http://localhost:3050/addNewData",
-        data: {
-          username: this.props.user,
-          title: this.state.title,
-          amount: this.state.amount,
-          category: this.state.category,
-          date: this.state.date,
-          month: this.state.date.substr(5, 2),
-          year: this.state.date.slice(0, 4),
-        },
-      });
+      this.setState({ errorMessage: "" });
+      if (this.state.isUpdate) {
+        console.log(this.state.userId);
+        axios({
+          method: "post",
+          headers: { Pragma: "no-cache" },
+          url: "http://localhost:3050/updateData",
+          data: {
+            id: this.state.userId,
+            username: this.props.user,
+            title: this.state.title,
+            amount: this.state.amount,
+            category: this.state.category,
+            date: this.state.date,
+          },
+        });
+      } else {
+        axios({
+          method: "post",
+          headers: { Pragma: "no-cache" },
+          url: "http://localhost:3050/addNewData",
+          data: {
+            username: this.props.user,
+            title: this.state.title,
+            amount: this.state.amount,
+            category: this.state.category,
+            date: this.state.date,
+            month: this.state.date.substr(5, 2),
+            year: this.state.date.slice(0, 4),
+          },
+        });
+      }
+      window.location.reload();
+      this.handleClose();
     }
-    window.location.reload();
-    this.handleClose();
   };
 
   render() {
@@ -308,6 +307,7 @@ export default class Expenses extends Component {
                 value={this.state.date}
                 onChange={this.handleChange}
               />
+              <Label value={this.state.errorMessage}></Label>
             </DialogContent>
             <DialogActions>
               <ReactBootStrap.Button

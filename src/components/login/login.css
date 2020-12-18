@@ -209,3 +209,8 @@ footer {
 .charts_h3 h3 {
   text-align: center;
 }
+
+.dateSubmit {
+  width: 300px;
+  margin-left: 40%;
+}

@@ -97,7 +97,10 @@ class Visualization extends Component {
   render() {
     return (
       <div>
-        <h4>Please pick the month and year expense charts</h4>
+        <h5>
+          Please pick the month and year expense charts Default Month : December
+          and Year : {this.state.year}
+        </h5>
 
         <MonthYearPicker
           selectedMonth={this.state.month}
@@ -111,6 +114,7 @@ class Visualization extends Component {
         <ReactBootStrap.Button
           onClick={(e) => this.dateSelected(e)}
           variant="primary"
+          className="dateSubmit"
         >
           Submit
         </ReactBootStrap.Button>

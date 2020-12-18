@@ -5,7 +5,7 @@ const app = express();
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const User = require("../model/userData");
-// const UserExpenses = require("../model/userExpenses");
+
 const Expenses = require("../model/userExpenses");
 const { ObjectId } = require("mongodb");
 app.use(cors());
