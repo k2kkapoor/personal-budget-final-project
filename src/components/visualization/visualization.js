@@ -22,7 +22,7 @@ class Visualization extends Component {
       rowId: "",
       month: "12",
       year: "2020",
-      months: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+      // months: ["01", "02", 03, 04, 5, 6, 7, 8, 9, 10, 11, 12],
     };
 
     this.dateSelected = this.dateSelected.bind(this);
@@ -33,12 +33,21 @@ class Visualization extends Component {
     let budgetLabel = [];
     let colorDataset = [];
     let hoverDataset = [];
+    let tempMonth = "";
+    if (parseInt(this.state.month) < 10) {
+      // console.log("Month value");
+      tempMonth = "0" + String(this.state.month);
+      //this.setState({ month: tempMonth });
+    } else {
+      tempMonth = this.state.month;
+    }
+    // console.log("month:" + tempMonth);
     let expenses = {
       labels: [],
       datasets: [
         {
-          label: "Expense",
           data: [],
+          label: "Bar Chart",
           backgroundColor: [],
           hoverBackgroundColor: [],
         },
@@ -47,17 +56,19 @@ class Visualization extends Component {
     axios({
       method: "post",
       headers: { Pragma: "no-cache" },
-      url: "http://localhost:3050/chartData",
+      url: "http://localhost:3050/groupData",
       data: {
         username: this.props.user,
-        month: this.state.month,
-        year: this.state.year,
+        month: String(tempMonth),
+        year: String(this.state.year),
       },
     }).then((res) => {
-      console.log(res.data);
+      tempMonth = "";
+      console.log(res.data[0]["_id"]);
+      console.log(res.data[0]["total"]);
       for (var i = 0; i < res.data.length; i++) {
-        budgetValue[i] = parseInt(res.data[i].amount);
-        budgetLabel[i] = res.data[i].category;
+        budgetValue[i] = parseInt(res.data[i]["total"]);
+        budgetLabel[i] = res.data[i]["_id"];
         colorDataset[i] = this.colorGenerator();
         hoverDataset[i] = this.colorGenerator();
       }

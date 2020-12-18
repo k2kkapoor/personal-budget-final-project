@@ -202,5 +202,10 @@ footer {
 }
 
 .pieChart {
+  margin: 35px auto;
   width: 50%;
+}
+
+.charts_h3 h3 {
+  text-align: center;
 }

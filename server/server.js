@@ -132,7 +132,7 @@ app.post("/updateData", function (req, res) {
 
 //Delete
 app.post("/deleteData", function (req, res) {
-  //console.log("id: " + req.body.id);
+  console.log("id: " + req.body.id);
   Expenses.findByIdAndDelete(
     req.body.id,
     { useFindAndModify: false },
@@ -169,6 +169,45 @@ app.post("/chartData", function (req, res) {
     .catch((mongooseErr) => {
       res.status("200").send(mongooseErr);
     });
+});
+
+//Get aggregate of Category
+app.post("/groupData", function (req, res) {
+  console.log(
+    "username: " +
+      req.body.username +
+      " month: " +
+      req.body.month +
+      " year: " +
+      req.body.year
+  );
+  var pipeline = [
+    {
+      $match: {
+        username: req.body.username,
+        month: req.body.month,
+        year: req.body.year,
+      },
+    },
+
+    {
+      $group: {
+        _id: "$category",
+        total: {
+          $sum: "$amount",
+        },
+      },
+    },
+  ];
+
+  Expenses.aggregate(pipeline).exec(function (err, result) {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    console.log(result);
+    res.json(result);
+  });
 });
 
 app.listen(3050, () => console.log("Server Started"));
