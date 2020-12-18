@@ -29,6 +29,7 @@ const App = () => {
   const handleLogin = () => {
     clearErrors();
 
+    //Authentication using firebase with username and password
     fire
       .auth()
       .signInWithEmailAndPassword(email, password)

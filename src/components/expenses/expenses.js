@@ -4,10 +4,8 @@ import * as ReactBootStrap from "react-bootstrap";
 import "react-bootstrap-table-next/dist/react-bootstrap-table2.min.css";
 import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory from "react-bootstrap-table2-paginator";
-
 import TextField from "@material-ui/core/TextField";
 import Label from "@material-ui/core/TextField";
-
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -15,16 +13,10 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
 export default class Expenses extends Component {
-  // state = {
-  //   expenses: [],
-  // };
-
   constructor(props) {
     super(props);
     this.updateClicked = this.updateClicked.bind(this);
     this.deleteClicked = this.deleteClicked.bind(this);
-
-    // bind here like this below
 
     this.updateButton = this.updateButton.bind(this);
     this.deleteButton = this.deleteButton.bind(this);
@@ -42,7 +34,7 @@ export default class Expenses extends Component {
         },
         {
           dataField: "amount",
-          text: "Amount",
+          text: "Amount (US Dollar $)",
         },
         {
           dataField: "category",
@@ -81,7 +73,6 @@ export default class Expenses extends Component {
 
   componentDidMount() {
     let currentComponent = this;
-    console.log(this.props.user);
 
     axios({
       method: "post",
@@ -91,28 +82,16 @@ export default class Expenses extends Component {
         username: this.props.user,
       },
     }).then(function (res) {
-      console.log(res.data);
       var tempExpenses = [];
       for (var i = 0; i < res.data.length; i++) {
         tempExpenses[i] = res.data[i];
       }
-      //console.log(tempExpenses);
+
       currentComponent.setState({ expenses: tempExpenses });
     });
-
-    // axios
-    //   .get("http://localhost:3050/expenses" + this.props.user)
-    //   .then(function (res) {
-    //     console.log(res.data);
-    //     var tempExpenses = [];
-    //     for (var i = 0; i < res.data.length; i++) {
-    //       tempExpenses[i] = res.data[i];
-    //     }
-    //     //console.log(tempExpenses);
-    //     currentComponent.setState({ expenses: tempExpenses });
-    //   });
   }
 
+  //clear form inputs
   clearInput = () => {
     this.setState({ title: "" });
     this.setState({ amount: "" });
@@ -120,23 +99,27 @@ export default class Expenses extends Component {
     this.setState({ date: "" });
   };
 
+  //form open handler
   handleClickOpen = () => {
     this.setState({ open: true });
   };
 
+  //form closing handler
   handleClose = () => {
     this.setState({ errorMessage: "" });
     this.clearInput();
     this.setState({ open: false });
   };
+
+  //handle change of form data
   handleChange = (event) => {
     this.setState({ [event.target.id]: event.target.value });
   };
 
+  //To check if update is clicked repopulate form with current data
   updateClicked = (e, row) => {
     this.setState({ isUpdate: true });
-    //alert("clicked");
-    console.log(row);
+
     this.setState({ userId: row._id });
     this.setState({ title: row.title });
     this.setState({ amount: row.amount });
@@ -144,10 +127,9 @@ export default class Expenses extends Component {
     this.setState({ date: row.date });
 
     this.handleClickOpen();
-
-    // console.log("event e:" + e);
   };
 
+  //Delete data handler
   deleteClicked = (e) => {
     axios({
       method: "post",
@@ -160,6 +142,7 @@ export default class Expenses extends Component {
     window.location.reload();
   };
 
+  //Function to add update button to the table
   updateButton(cell, row, rowIndex, formatExtraData) {
     return (
       <ReactBootStrap.Button
@@ -172,6 +155,7 @@ export default class Expenses extends Component {
     );
   }
 
+  //Function to add delete button to the table
   deleteButton(cell, row, rowIndex, formatExtraData) {
     return (
       <ReactBootStrap.Button
@@ -184,6 +168,7 @@ export default class Expenses extends Component {
     );
   }
 
+  //Submit update or add new data
   handleSubmit = () => {
     if (
       this.state.title === "" ||
@@ -195,7 +180,6 @@ export default class Expenses extends Component {
     } else {
       this.setState({ errorMessage: "" });
       if (this.state.isUpdate) {
-        console.log(this.state.userId);
         axios({
           method: "post",
           headers: { Pragma: "no-cache" },
@@ -210,6 +194,8 @@ export default class Expenses extends Component {
           },
         });
       } else {
+        console.log("here");
+        this.setState({ isUpdate: false });
         axios({
           method: "post",
           headers: { Pragma: "no-cache" },
@@ -246,6 +232,7 @@ export default class Expenses extends Component {
     };
     return (
       <div>
+        <div className="userInfo">Hello user : {this.props.user} </div>
         <BootstrapTable
           className="dataTable"
           keyField="id"
@@ -277,6 +264,7 @@ export default class Expenses extends Component {
                 id="title"
                 label="Title"
                 type="text"
+                required="yes"
                 value={this.state.title}
                 onChange={this.handleChange}
               />
@@ -294,6 +282,7 @@ export default class Expenses extends Component {
                 id="category"
                 label="Category"
                 type="text"
+                required="yes"
                 value={this.state.category}
                 onChange={this.handleChange}
               />
@@ -302,12 +291,13 @@ export default class Expenses extends Component {
                 margin="dense"
                 id="date"
                 label=""
+                required="yes"
                 disableClock={true}
                 type="date"
                 value={this.state.date}
                 onChange={this.handleChange}
               />
-              <Label value={this.state.errorMessage}></Label>
+              <h6>{this.state.errorMessage}</h6>
             </DialogContent>
             <DialogActions>
               <ReactBootStrap.Button

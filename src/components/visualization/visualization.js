@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from "react";
+import React, { Component } from "react";
 import axios from "axios";
 import * as ReactBootStrap from "react-bootstrap";
 
@@ -22,12 +22,12 @@ class Visualization extends Component {
       rowId: "",
       month: "12",
       year: "2020",
-      // months: ["01", "02", 03, 04, 5, 6, 7, 8, 9, 10, 11, 12],
+      noDataErr: "",
     };
 
     this.dateSelected = this.dateSelected.bind(this);
   }
-
+  //Component to select date
   dateSelected = (e) => {
     let budgetValue = [];
     let budgetLabel = [];
@@ -35,13 +35,11 @@ class Visualization extends Component {
     let hoverDataset = [];
     let tempMonth = "";
     if (parseInt(this.state.month) < 10) {
-      // console.log("Month value");
       tempMonth = "0" + String(this.state.month);
-      //this.setState({ month: tempMonth });
     } else {
       tempMonth = this.state.month;
     }
-    // console.log("month:" + tempMonth);
+
     let expenses = {
       labels: [],
       datasets: [
@@ -53,6 +51,8 @@ class Visualization extends Component {
         },
       ],
     };
+
+    //Here we are calling backend for category wise total amount spent by the user according to the month selected
     axios({
       method: "post",
       headers: { Pragma: "no-cache" },
@@ -62,25 +62,33 @@ class Visualization extends Component {
         month: String(tempMonth),
         year: String(this.state.year),
       },
-    }).then((res) => {
-      tempMonth = "";
-      console.log(res.data[0]["_id"]);
-      console.log(res.data[0]["total"]);
-      for (var i = 0; i < res.data.length; i++) {
-        budgetValue[i] = parseInt(res.data[i]["total"]);
-        budgetLabel[i] = res.data[i]["_id"];
-        colorDataset[i] = this.colorGenerator();
-        hoverDataset[i] = this.colorGenerator();
-      }
-      expenses.labels = budgetLabel;
+    })
+      .then((res) => {
+        this.setState({ noDataErr: "" });
+        tempMonth = "";
+        for (var i = 0; i < res.data.length; i++) {
+          budgetValue[i] = parseInt(res.data[i]["total"]);
+          budgetLabel[i] = res.data[i]["_id"];
+          colorDataset[i] = this.colorGenerator();
+          hoverDataset[i] = this.colorGenerator();
+        }
+        expenses.labels = budgetLabel;
 
-      expenses.datasets[0].data = budgetValue;
-      expenses.datasets[0].backgroundColor = colorDataset;
-      expenses.datasets[0].hoverBackgroundColor = hoverDataset;
+        expenses.datasets[0].data = budgetValue;
+        expenses.datasets[0].backgroundColor = colorDataset;
+        expenses.datasets[0].hoverBackgroundColor = hoverDataset;
 
-      this.setState({ finalState: expenses });
-      console.log(this.state.finalState);
-    });
+        if (budgetLabel.length === 0) {
+          this.setState({ noDataErr: "No data for selected date found" });
+        }
+
+        this.setState({ finalState: expenses });
+        console.log(this.state.finalState);
+      })
+      .catch((err) => {
+        console.log("error:" + err);
+        this.setState({ noDataErr: "No data for selected date found" });
+      });
   };
 
   handleChange = (event) => {
@@ -97,10 +105,13 @@ class Visualization extends Component {
   render() {
     return (
       <div>
-        <h5>
+        <div className="userInfo">
+          <h6>Hello user : {this.props.user} </h6>
+        </div>
+        <h6>
           Please pick the month and year expense charts Default Month : December
           and Year : {this.state.year}
-        </h5>
+        </h6>
 
         <MonthYearPicker
           selectedMonth={this.state.month}
@@ -119,14 +130,9 @@ class Visualization extends Component {
           Submit
         </ReactBootStrap.Button>
 
-        <Charts expenses={this.state.finalState} />
-        {/* <div className="pieChart">
-          <Pie data={this.state.expenses} />
-        </div>
+        <h6>{this.state.noDataErr}</h6>
 
-        <div className="pieChart">
-          <Bar data={this.state.expenses} />
-        </div> */}
+        <Charts expenses={this.state.finalState} />
       </div>
     );
   }

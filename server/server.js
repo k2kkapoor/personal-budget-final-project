@@ -202,7 +202,7 @@ app.post("/groupData", function (req, res) {
 
   Expenses.aggregate(pipeline).exec(function (err, result) {
     if (err) {
-      console.log(err);
+      res.status("500").send(err);
       return;
     }
     console.log(result);

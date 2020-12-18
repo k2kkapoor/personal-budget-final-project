@@ -22,8 +22,6 @@ button {
   min-height: 100vh;
   padding: 0 20px;
 
-  /* background-image: url("/src/assests/bg.jpg"); */
-  /* background-color: #cccccc; */
   background: #b66767;
   display: flex;
 }
@@ -213,4 +211,13 @@ footer {
 .dateSubmit {
   width: 300px;
   margin-left: 40%;
+}
+
+.userInfo {
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+.noBorderLabel {
+  border: none;
 }

@@ -6,20 +6,7 @@ class Charts extends Component {
     const { expenses } = this.props;
 
     console.log(expenses);
-    const options = {
-      scales: {
-        yAxis: [
-          {
-            stacked: true,
-          },
-        ],
-        xAxis: [
-          {
-            stacked: true,
-          },
-        ],
-      },
-    };
+
     return (
       <div className="charts_h3">
         <div className="pieChart">
