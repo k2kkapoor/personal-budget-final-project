@@ -77,7 +77,7 @@ export default class Expenses extends Component {
     axios({
       method: "post",
       headers: { Pragma: "no-cache" },
-      url: "http://localhost:3050/expenses",
+      url: "http://134.122.8.239:3050/expenses",
       data: {
         username: this.props.user,
       },
@@ -134,7 +134,7 @@ export default class Expenses extends Component {
     axios({
       method: "post",
       headers: { Pragma: "no-cache" },
-      url: "http://localhost:3050/deleteData",
+      url: "http://134.122.8.239:3050/deleteData",
       data: {
         id: e.target.value,
       },
@@ -183,7 +183,7 @@ export default class Expenses extends Component {
         axios({
           method: "post",
           headers: { Pragma: "no-cache" },
-          url: "http://localhost:3050/updateData",
+          url: "http://134.122.8.239:3050/updateData",
           data: {
             id: this.state.userId,
             username: this.props.user,
@@ -198,7 +198,7 @@ export default class Expenses extends Component {
         axios({
           method: "post",
           headers: { Pragma: "no-cache" },
-          url: "http://localhost:3050/addNewData",
+          url: "http://134.122.8.239:3050/addNewData",
           data: {
             username: this.props.user,
             title: this.state.title,
