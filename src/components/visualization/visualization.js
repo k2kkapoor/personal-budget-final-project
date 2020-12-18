@@ -23,12 +23,14 @@ class Visualization extends Component {
       month: "12",
       year: "2020",
       noDataErr: "",
+      showResult: false,
     };
 
     this.dateSelected = this.dateSelected.bind(this);
   }
   //Component to select date
   dateSelected = (e) => {
+    this.setState({ showResult: true });
     let budgetValue = [];
     let budgetLabel = [];
     let colorDataset = [];
@@ -79,6 +81,7 @@ class Visualization extends Component {
         expenses.datasets[0].hoverBackgroundColor = hoverDataset;
 
         if (budgetLabel.length === 0) {
+          this.setState({ showResult: false });
           this.setState({ noDataErr: "No data for selected date found" });
         }
 
@@ -131,8 +134,10 @@ class Visualization extends Component {
         </ReactBootStrap.Button>
 
         <h6>{this.state.noDataErr}</h6>
-
-        <Charts expenses={this.state.finalState} />
+        {this.state.showResult ? (
+          <Charts expenses={this.state.finalState} />
+        ) : null}
+        {/* <Charts expenses={this.state.finalState} /> */}
       </div>
     );
   }

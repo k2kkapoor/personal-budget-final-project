@@ -36,6 +36,7 @@ import { Layout } from "../Layout";
 import fire from "../../fire";
 
 import Visualization from "../visualization/visualization";
+import { NoMatch } from "../NoMatch";
 
 const HomePage = ({ handleLogout, email }) => {
   const [userName, setUserName] = useState("");
@@ -65,6 +66,7 @@ const HomePage = ({ handleLogout, email }) => {
               path="/visualization"
               component={() => <Visualization user={userName} />}
             ></Route>
+            <Route component={NoMatch}></Route>
           </Switch>
         </Router>
       </Layout>

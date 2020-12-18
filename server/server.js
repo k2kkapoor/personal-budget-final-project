@@ -9,7 +9,14 @@ const User = require("../model/userData");
 const Expenses = require("../model/userExpenses");
 const { ObjectId } = require("mongodb");
 app.use(cors());
-mongoose.connect("mongodb://localhost:27017/pb-project", {
+
+const URI =
+  "mongodb+srv://pbUser:pbUser@cluster0.a55yh.mongodb.net/pb-project?retryWrites=true&w=majority";
+// mongoose.connect("mongodb://localhost:27017/pb-project", {
+//   useUnifiedTopology: true,
+//   useNewUrlParser: true,
+// });
+mongoose.connect(URI, {
   useUnifiedTopology: true,
   useNewUrlParser: true,
 });
