@@ -31,7 +31,6 @@ const HomePage = ({ handleLogout, email }) => {
               component={() => <Expenses user={userName} />}
             ></Route>
             <Route
-              exact
               path="/visualization"
               component={() => <Visualization user={userName} />}
             ></Route>

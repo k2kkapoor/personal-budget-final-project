@@ -193,6 +193,7 @@ export default class Expenses extends Component {
             date: this.state.date,
           },
         });
+        this.setState({ isUpdate: false });
       } else {
         this.setState({ isUpdate: false });
         axios({
