@@ -5,8 +5,7 @@ class Charts extends Component {
   render() {
     const { expenses } = this.props;
 
-    console.log(expenses);
-
+    // Charts are rendered here using react chartjs 2
     return (
       <div className="charts_h3">
         <div className="pieChart">

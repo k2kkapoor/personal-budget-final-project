@@ -86,10 +86,8 @@ class Visualization extends Component {
         }
 
         this.setState({ finalState: expenses });
-        console.log(this.state.finalState);
       })
       .catch((err) => {
-        console.log("error:" + err);
         this.setState({ noDataErr: "No data for selected date found" });
       });
   };
@@ -98,6 +96,7 @@ class Visualization extends Component {
     this.setState({ [event.target.id]: event.target.value });
   };
 
+  // Dynamic color generator
   colorGenerator = function () {
     let r = Math.floor(Math.random() * 255);
     let g = Math.floor(Math.random() * 255);

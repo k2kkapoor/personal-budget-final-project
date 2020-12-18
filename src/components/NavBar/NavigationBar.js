@@ -1,6 +1,6 @@
 import React from "react";
 
-export const NavigationBar = ({ handleLogout }) => {
+export const NavigationBar = ({ handleLogout, userName }) => {
   return (
     <nav className="mr-auto">
       <h2>Personal Budget</h2>

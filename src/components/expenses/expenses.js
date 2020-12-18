@@ -194,7 +194,6 @@ export default class Expenses extends Component {
           },
         });
       } else {
-        console.log("here");
         this.setState({ isUpdate: false });
         axios({
           method: "post",

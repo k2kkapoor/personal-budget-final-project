@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./components/login/login.css";
+import "./components/CSS/common.css";
 import axios from "axios";
 import fire from "./fire";
 import Login from "./components/login/Login";
@@ -52,6 +52,7 @@ const App = () => {
       });
   };
 
+  //SignUp component
   const handleSignup = () => {
     localStorage.clear();
     clearErrors();

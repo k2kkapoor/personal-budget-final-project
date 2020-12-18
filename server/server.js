@@ -28,7 +28,7 @@ app.use((req, res, next) => {
   res.setHeader(
     "Access-Control-Allow-Methods",
     "OPTIONS, GET, POST, PUT, PATCH, DELETE"
-  ); // allowed actiosn
+  ); // allowed action
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
 
   if (req.method === "OPTIONS") {
@@ -44,7 +44,6 @@ db.once("open", () => console.log("Database connected"));
 app.use(bodyParser.json());
 
 app.post("/expenses", function (req, res) {
-  //console.log("post body: " + req.body.username);
   Expenses.find({ username: req.body.username })
     .then((userFound) => {
       if (!userFound) {
@@ -91,7 +90,6 @@ app.post("/addUser", function (req, res) {
 
 //Add new expense data
 app.post("/addNewData", function (req, res) {
-  console.log(req.body.month);
   let addData = {
     username: req.body.username,
     title: req.body.title,
@@ -139,7 +137,6 @@ app.post("/updateData", function (req, res) {
 
 //Delete
 app.post("/deleteData", function (req, res) {
-  console.log("id: " + req.body.id);
   Expenses.findByIdAndDelete(
     req.body.id,
     { useFindAndModify: false },
@@ -153,14 +150,6 @@ app.post("/deleteData", function (req, res) {
 
 //get data by month and year
 app.post("/chartData", function (req, res) {
-  console.log(
-    "username: " +
-      req.body.username +
-      " month: " +
-      req.body.month +
-      " month: " +
-      req.body.year
-  );
   Expenses.find({
     username: req.body.username,
     month: req.body.month,
@@ -170,7 +159,6 @@ app.post("/chartData", function (req, res) {
       if (!userFound) {
         return res.status(404).json("Something went wrong");
       }
-      console.log("found data " + userFound);
       return res.status(200).json(userFound);
     })
     .catch((mongooseErr) => {
@@ -180,14 +168,6 @@ app.post("/chartData", function (req, res) {
 
 //Get aggregate of Category
 app.post("/groupData", function (req, res) {
-  console.log(
-    "username: " +
-      req.body.username +
-      " month: " +
-      req.body.month +
-      " year: " +
-      req.body.year
-  );
   var pipeline = [
     {
       $match: {
@@ -212,7 +192,7 @@ app.post("/groupData", function (req, res) {
       res.status("500").send(err);
       return;
     }
-    console.log(result);
+
     res.json(result);
   });
 });
