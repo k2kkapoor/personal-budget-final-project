@@ -63,7 +63,7 @@ const App = () => {
         axios({
           method: "post",
           headers: { Pragma: "no-cache" },
-          url: "http://134.122.8.239:3050/addUser",
+          url: "http://104.236.16.238:3001/addUser",
           data: {
             name: name,
             username: email,

@@ -58,7 +58,7 @@ class Visualization extends Component {
     axios({
       method: "post",
       headers: { Pragma: "no-cache" },
-      url: "http://134.122.8.239:3050/groupData",
+      url: "http://104.236.16.238:3001/groupData",
       data: {
         username: this.props.user,
         month: String(tempMonth),
