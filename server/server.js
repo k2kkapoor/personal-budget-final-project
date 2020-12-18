@@ -5,6 +5,8 @@ const app = express();
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const User = require("../model/userData");
+// const UserExpenses = require("../model/userExpenses");
+const Expenses = require("../model/userExpenses");
 const { ObjectId } = require("mongodb");
 app.use(cors());
 mongoose.connect("mongodb://localhost:27017/pb-project", {
@@ -34,17 +36,9 @@ db.once("open", () => console.log("Database connected"));
 
 app.use(bodyParser.json());
 
-// app.get("/user", function (req, res) {
-//   User.find({}, function (err, users) {
-//     if (err) {
-//       res.send("Something went wrong");
-//     }
-//     res.json(users);
-//   });
-// });
-
-app.get("/user/:username", function (req, res) {
-  User.findOne({ username: req.params.username })
+app.post("/expenses", function (req, res) {
+  //console.log("post body: " + req.body.username);
+  Expenses.find({ username: req.body.username })
     .then((userFound) => {
       if (!userFound) {
         return res.status(404).json("Something went wrong");
@@ -56,12 +50,26 @@ app.get("/user/:username", function (req, res) {
     });
 });
 
+//Get user data
+// app.get("/expenses/:username", (req, res) => {
+//   Expenses.find({ username: req.params.username })
+//     .then((userFound) => {
+//       if (!userFound) {
+//         return res.status(404).json("Something went wrong");
+//       }
+//       return res.status(200).json(userFound);
+//     })
+//     .catch((mongooseErr) => {
+//       res.status("200").send(mongooseErr);
+//     });
+// });
+
+//Add new user to database
 app.post("/addUser", function (req, res) {
   let addData = {
     name: req.body.name,
     username: req.body.username,
   };
-  console.log("Server js data: " + addData);
 
   User.create(addData)
     .then((data) => {
@@ -74,47 +82,93 @@ app.post("/addUser", function (req, res) {
     });
 });
 
-app.post("/addNewData/:username", function (req, res) {
+//Add new expense data
+app.post("/addNewData", function (req, res) {
+  console.log(req.body.month);
   let addData = {
-    $push: {
-      expense: {
-        title: req.body.title,
-        amount: req.body.amount,
-        category: req.body.category,
-        date: req.body.date,
-      },
+    username: req.body.username,
+    title: req.body.title,
+    amount: req.body.amount,
+    category: req.body.category,
+    date: req.body.date,
+    month: req.body.month,
+    year: req.body.year,
+  };
+
+  Expenses.create(addData)
+    .then((data) => {
+      data = data.save();
+      res.json(data);
+      //mongoose.connection.close();
+    })
+    .catch((mongooseErr) => {
+      res.status("200").send(mongooseErr);
+    });
+});
+
+//Update expense data
+app.post("/updateData", function (req, res) {
+  let addData = {
+    $set: {
+      username: req.body.username,
+      title: req.body.title,
+      amount: req.body.amount,
+      category: req.body.category,
+      date: req.body.date,
     },
   };
-  console.log("Server js data: " + addData);
 
-  User.findOneAndUpdate(
-    { username: req.params.username },
+  Expenses.findByIdAndUpdate(
+    req.body.id,
     addData,
-    function (err, numberAffected, rawResponse) {
-      console.log(err);
+    { useFindAndModify: false },
+    function (err) {
+      if (err) {
+        res.send(err);
+      }
     }
   );
+});
 
-  // User.update({ username: req.params.username }), addData,
-  //   .then((userFound) => {
-  //     if (!userFound) {
-  //       return res.status(404).json("Something went wrong");
-  //     }
-  //     return res.status(200).send(raw);;
-  //   })
-  //   .catch((mongooseErr) => {
-  //     res.status("200").send(mongooseErr);
-  //   });
+//Delete
+app.post("/deleteData", function (req, res) {
+  //console.log("id: " + req.body.id);
+  Expenses.findByIdAndDelete(
+    req.body.id,
+    { useFindAndModify: false },
+    function (err) {
+      if (err) {
+        res.send(err);
+      }
+    }
+  );
+});
 
-  // User.findByIdAndUpdate({ username: req.body.username })
-  //   .then((data) => {
-  //     data = data.save();
-  //     res.json(data);
-  //     //mongoose.connection.close();
-  //   })
-  //   .catch((mongooseErr) => {
-  //     res.status("200").send(mongooseErr);
-  //   });
+//get data by month and year
+app.post("/chartData", function (req, res) {
+  console.log(
+    "username: " +
+      req.body.username +
+      " month: " +
+      req.body.month +
+      " month: " +
+      req.body.year
+  );
+  Expenses.find({
+    username: req.body.username,
+    month: req.body.month,
+    year: req.body.year,
+  })
+    .then((userFound) => {
+      if (!userFound) {
+        return res.status(404).json("Something went wrong");
+      }
+      console.log("found data " + userFound);
+      return res.status(200).json(userFound);
+    })
+    .catch((mongooseErr) => {
+      res.status("200").send(mongooseErr);
+    });
 });
 
 app.listen(3050, () => console.log("Server Started"));

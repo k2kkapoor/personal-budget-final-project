@@ -35,11 +35,11 @@ import Expenses from "../expenses/expenses";
 import { Layout } from "../Layout";
 import fire from "../../fire";
 import axios from "axios";
+import Visualization from "../visualization/visualization";
 
 const HomePage = ({ handleLogout, email }) => {
   const [userName, setUserName] = useState("");
   const [name, setName] = useState("");
-  console.log("email" + email);
 
   fire.auth().onAuthStateChanged(function (user) {
     if (user) {
@@ -62,10 +62,15 @@ const HomePage = ({ handleLogout, email }) => {
       <Layout>
         <Router>
           <Switch>
-            <Route exact path="/" comaponent={() => <HomePage />} />
             <Route
-              path="/expenses"
+              exact
+              path="/"
               component={() => <Expenses user={userName} />}
+            ></Route>
+            <Route
+              exact
+              path="/visualization"
+              component={() => <Visualization user={userName} />}
             ></Route>
           </Switch>
         </Router>

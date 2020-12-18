@@ -28,11 +28,12 @@ const App = () => {
 
   const handleLogin = () => {
     clearErrors();
+
     fire
       .auth()
       .signInWithEmailAndPassword(email, password)
       .then((user) => {
-        window.location = <HomePage />;
+        // window.location = <HomePage />;
       })
 
       .catch((err) => {
@@ -111,7 +112,7 @@ const App = () => {
     return (
       <div className="App">
         {user ? (
-          <HomePage handleLogout={handleLogout} email={email} />
+          <HomePage handleLogout={handleLogout} />
         ) : (
           <Login
             name={name}
