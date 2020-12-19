@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useEffect } from "react";
 import axios from "axios";
 import * as ReactBootStrap from "react-bootstrap";
 import "react-bootstrap-table-next/dist/react-bootstrap-table2.min.css";
@@ -168,6 +168,25 @@ export default class Expenses extends Component {
     );
   }
 
+  // handleSubmit = () => {
+  //   axios({
+  //     method: "post",
+  //     headers: { Pragma: "no-cache" },
+  //     url: "http://104.236.16.238:3001/addNewData",
+  //     data: {
+  //       username: this.props.user,
+  //       title: this.state.title,
+  //       amount: this.state.amount,
+  //       category: this.state.category,
+  //       date: this.state.date,
+  //       month: this.state.date.substr(5, 2),
+  //       year: this.state.date.slice(0, 4),
+  //     },
+  //   });
+  //   // window.location.reload();
+  //   this.handleClose();
+  // };
+
   //Submit update or add new data
   handleSubmit = () => {
     if (
@@ -210,7 +229,7 @@ export default class Expenses extends Component {
         });
       }
       this.setState({ isUpdate: false });
-      window.location.reload();
+      //window.location.reload();
       this.handleClose();
     }
   };
