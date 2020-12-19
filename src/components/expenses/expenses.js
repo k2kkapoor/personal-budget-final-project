@@ -183,7 +183,7 @@ export default class Expenses extends Component {
         axios({
           method: "post",
           headers: { Pragma: "no-cache" },
-          url: "http://l104.236.16.238:3001/updateData",
+          url: "http://104.236.16.238:3001/updateData",
           data: {
             id: this.state.userId,
             username: this.props.user,
@@ -197,7 +197,7 @@ export default class Expenses extends Component {
         axios({
           method: "post",
           headers: { Pragma: "no-cache" },
-          url: "http://104.236.16.238:3001addNewData",
+          url: "http://104.236.16.238:3001/addNewData",
           data: {
             username: this.props.user,
             title: this.state.title,
