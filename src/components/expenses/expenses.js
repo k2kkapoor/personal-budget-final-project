@@ -11,6 +11,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 
 import DialogTitle from "@material-ui/core/DialogTitle";
+import { Redirect } from "react-router-dom";
 
 export default class Expenses extends Component {
   constructor(props) {
@@ -68,6 +69,7 @@ export default class Expenses extends Component {
       isUpdate: false,
       error: false,
       errorMessage: "",
+      itemDeleted: false,
     };
   }
 
@@ -89,6 +91,30 @@ export default class Expenses extends Component {
 
       currentComponent.setState({ expenses: tempExpenses });
     });
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    let currentComponent = this;
+    if (
+      prevProps.open !== this.state.open ||
+      prevProps.itemDeleted !== this.state.itemDeleted
+    ) {
+      axios({
+        method: "post",
+        headers: { Pragma: "no-cache" },
+        url: "http://104.236.16.238:3001/expenses",
+        data: {
+          username: this.props.user,
+        },
+      }).then(function (res) {
+        var tempExpenses = [];
+        for (var i = 0; i < res.data.length; i++) {
+          tempExpenses[i] = res.data[i];
+        }
+
+        currentComponent.setState({ expenses: tempExpenses });
+      });
+    }
   }
 
   //clear form inputs
@@ -131,6 +157,7 @@ export default class Expenses extends Component {
 
   //Delete data handler
   deleteClicked = (e) => {
+    this.setState({ itemDeleted: false });
     axios({
       method: "post",
       headers: { Pragma: "no-cache" },
@@ -139,6 +166,7 @@ export default class Expenses extends Component {
         id: e.target.value,
       },
     });
+    this.setState({ itemDeleted: true });
     // window.location.reload();
   };
 
@@ -188,12 +216,12 @@ export default class Expenses extends Component {
   // };
 
   //Submit update or add new data
-  handleSubmit = () => {
+  handleSubmit = (e) => {
     if (
       this.state.title === "" ||
       this.state.amount === "" ||
-      this.state.title === "" ||
-      this.state.title === ""
+      this.state.category === "" ||
+      this.state.date === ""
     ) {
       this.setState({ errorMessage: "Please enter all the values." });
     } else {
@@ -228,8 +256,9 @@ export default class Expenses extends Component {
           },
         });
       }
+
       this.setState({ isUpdate: false });
-      //window.location.reload();
+
       this.handleClose();
     }
   };
@@ -250,10 +279,12 @@ export default class Expenses extends Component {
     };
     return (
       <div>
+        {/* A11y implementation */}
         <div className="userInfo">Hello user : {this.props.user} </div>
         <BootstrapTable
           className="dataTable"
           keyField="id"
+          aria-label="Table Data"
           data={this.state.expenses}
           columns={this.state.columns}
           pagination={paginationFactory(options)}
@@ -268,11 +299,12 @@ export default class Expenses extends Component {
           >
             Add new Expense
           </ReactBootStrap.Button>
+          {/* A11y implementation */}
           <Dialog
             className="newData"
             open={this.state.open}
             onClose={this.handleClose}
-            aria-labelledby="form-dialog-title"
+            aria-label="form-dialog-title"
           >
             <DialogTitle id="form-dialog-title">Add Expense</DialogTitle>
             <DialogContent className="dialogContent">
@@ -286,6 +318,7 @@ export default class Expenses extends Component {
                 value={this.state.title}
                 onChange={this.handleChange}
               />
+
               <TextField
                 margin="dense"
                 id="amount"
@@ -334,6 +367,8 @@ export default class Expenses extends Component {
               </ReactBootStrap.Button>
             </DialogActions>
           </Dialog>
+
+          {this.state.open ? <Redirect to="" /> : <Redirect to="" />}
         </div>
       </div>
     );
