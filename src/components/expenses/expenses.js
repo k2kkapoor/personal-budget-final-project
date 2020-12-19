@@ -183,7 +183,7 @@ export default class Expenses extends Component {
         axios({
           method: "post",
           headers: { Pragma: "no-cache" },
-          url: "http://104.236.16.238:3001/updateData",
+          url: "http://l104.236.16.238:3001/updateData",
           data: {
             id: this.state.userId,
             username: this.props.user,
@@ -193,13 +193,11 @@ export default class Expenses extends Component {
             date: this.state.date,
           },
         });
-        this.setState({ isUpdate: false });
       } else {
-        this.setState({ isUpdate: false });
         axios({
           method: "post",
           headers: { Pragma: "no-cache" },
-          url: "http://104.236.16.238:3001/addNewData",
+          url: "http://104.236.16.238:3001addNewData",
           data: {
             username: this.props.user,
             title: this.state.title,
@@ -211,6 +209,7 @@ export default class Expenses extends Component {
           },
         });
       }
+      this.setState({ isUpdate: false });
       window.location.reload();
       this.handleClose();
     }
