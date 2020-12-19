@@ -139,7 +139,7 @@ export default class Expenses extends Component {
         id: e.target.value,
       },
     });
-    window.location.reload();
+    // window.location.reload();
   };
 
   //Function to add update button to the table
