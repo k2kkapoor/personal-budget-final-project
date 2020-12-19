@@ -367,8 +367,6 @@ export default class Expenses extends Component {
               </ReactBootStrap.Button>
             </DialogActions>
           </Dialog>
-
-          {this.state.open ? <Redirect to="" /> : <Redirect to="" />}
         </div>
       </div>
     );
